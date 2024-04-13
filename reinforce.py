@@ -37,6 +37,31 @@ class ReinforceAgent:
         # print(f'Distribution: {action}')
 
         return chosen_action
+    
+    def sample_action(self, state: np.ndarray) -> float:
+        """Returns an action, conditioned on the policy and observation.
+
+        Args:
+            state: Observation from the environment
+
+        Returns:
+            action: Action to be performed
+        """
+        state = torch.tensor(np.array([state]))
+        state = state.reshape((288, 96))
+        action_means, action_stddevs = self.policy_network(state)
+
+        # create a normal distribution from the predicted
+        #   mean and standard deviation and sample an action
+        distrib = Normal(action_means[0] + self.eps, action_stddevs[0] + self.eps)
+        action = distrib.sample()
+        probability = distrib.log_prob(action)
+
+        action = action.numpy()
+
+        self.probabilities_for_action.append(probability)
+
+        return action
 
     def update_policy_network(self):
 

@@ -52,20 +52,10 @@ class PolicyNetworkContinuous(nn.Module):
             ])
 
         self.shared_net = nn.Sequential(*shared_net_layers)
-        self.policy_mean_net = nn.Sequential(nn.Linear(neurons_per_layer[-1], action_space_dim), nn.Sigmoid())
-        self.policy_stddev_net = nn.Sequential(nn.Linear(neurons_per_layer[-1], action_space_dim), nn.Sigmoid())
+        self.policy_mean_net = nn.Sequential(nn.Linear(neurons_per_layer[-1], action_space_dim), nn.Tanh())
+        self.policy_stddev_net = nn.Sequential(nn.Linear(neurons_per_layer[-1], action_space_dim), nn.Tanh())
 
     def forward(self, x: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor]:
-        """Conditioned on the observation, returns the mean and standard deviation
-         of a normal distribution from which an action is sampled from.
-
-        Args:
-            x: Observation from the environment
-
-        Returns:
-            action_means: predicted mean of the normal distribution
-            action_stddevs: predicted standard deviation of the normal distribution
-        """
         shared_features = self.shared_net(x.float())
 
         action_means = self.policy_mean_net(shared_features)

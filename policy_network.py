@@ -2,7 +2,7 @@ import torch.nn as nn
 import torch
 
 
-class PolicyNetwork(nn.Module):
+class PolicyNetworkDiscrete(nn.Module):
 
     def __init__(self, observation_space_dim: int, action_space_dim: int):
         super().__init__()

@@ -1,7 +1,7 @@
 import sys
 
 from torch.distributions.normal import Normal
-from policy_network import PolicyNetwork
+from policy_network import PolicyNetworkDiscrete
 from torch.optim import AdamW
 
 
@@ -11,7 +11,7 @@ import torch
 
 class ReinforceAgent:
 
-    def __init__(self, observation_space_dim: int, action_space_dim: int):
+    def __init__(self, policy):
         self.learning_rate = 10e-4
         self.gamma = 0.9
         self.eps = 1e-6
@@ -19,7 +19,7 @@ class ReinforceAgent:
         self.probabilities_for_action = []
         self.rewards_for_action = []
 
-        self.policy_network = PolicyNetwork(observation_space_dim, action_space_dim)
+        self.policy_network = policy
         self.optimizer = AdamW(self.policy_network.parameters(), lr=self.learning_rate)
 
     def sample_action_discrete(self, state: np.ndarray) -> int:

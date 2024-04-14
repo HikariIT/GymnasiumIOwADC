@@ -48,7 +48,7 @@ class ReinforceAgent:
             action: Action to be performed
         """
         state = torch.tensor(np.array([state]))
-        state = state.reshape((288, 96))
+        #state = state.reshape((3, 9216))
         action_means, action_stddevs = self.policy_network(state)
 
         # create a normal distribution from the predicted

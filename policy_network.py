@@ -13,7 +13,7 @@ class PolicyNetworkDiscrete(nn.Module):
         for i in range(1, len(neurons_per_layer)):
             shared_net_layers.extend([
                 nn.Linear(neurons_per_layer[i - 1], neurons_per_layer[i]),
-                nn.ReLU()
+                nn.Tanh()
             ])
 
         self.shared_net = nn.Sequential(*shared_net_layers)
@@ -48,12 +48,12 @@ class PolicyNetworkContinuous(nn.Module):
         for i in range(1, len(neurons_per_layer)):
             shared_net_layers.extend([
                 nn.Linear(neurons_per_layer[i - 1], neurons_per_layer[i]),
-                nn.Tanh()
+                nn.ReLU()
             ])
 
         self.shared_net = nn.Sequential(*shared_net_layers)
-        self.policy_mean_net = nn.Sequential(nn.Linear(neurons_per_layer[-1], action_space_dim), nn.Tanh())
-        self.policy_stddev_net = nn.Sequential(nn.Linear(neurons_per_layer[-1], action_space_dim), nn.Tanh())
+        self.policy_mean_net = nn.Sequential(nn.Linear(neurons_per_layer[-1], action_space_dim), nn.Sigmoid())
+        self.policy_stddev_net = nn.Sequential(nn.Linear(neurons_per_layer[-1], action_space_dim),nn.Sigmoid())
 
     def forward(self, x: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor]:
         shared_features = self.shared_net(x.float())
